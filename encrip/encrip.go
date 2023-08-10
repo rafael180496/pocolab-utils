@@ -13,9 +13,60 @@ import (
 	"io"
 	"time"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/rafael180496/pocolab-utils/casting"
 	"github.com/rafael180496/pocolab-utils/utils"
 )
+
+// TokenData : estructura para devolver un token
+type TokenInput struct {
+	//Autor o empresa
+	Signature string
+	//timepo a expirar si es menor o igual a 0 no expirara
+	Expired        int
+	SecretKey      string
+	UserData       map[string]interface{}
+	AdditionalData map[string]interface{}
+}
+
+type TokenOutput struct {
+	UserData       map[string]interface{} `json:"userData,omitempty"`
+	AdditionalData map[string]interface{} `json:"additionalData,omitempty"`
+	jwt.StandardClaims
+}
+
+// TokenifyJwt :  crea un token con data jwt
+func TokenifyJwt(inputData TokenInput) (string, error) {
+	dataJwtStandard := jwt.StandardClaims{
+		IssuedAt: time.Now().Unix(),
+		Issuer:   inputData.Signature,
+	}
+	if inputData.Expired > 0 {
+		dataJwtStandard.ExpiresAt = time.Now().Add(time.Minute * time.Duration(inputData.Expired)).Unix()
+	}
+	claims := TokenOutput{
+		UserData:       inputData.UserData,
+		AdditionalData: inputData.AdditionalData,
+		StandardClaims: dataJwtStandard,
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
+	return token.SignedString([]byte(inputData.SecretKey))
+}
+
+// DetokenifyJwt : decodifica un token regresando la data correspondiente
+func DetokenifyJwt(tokenStr, secretKey string) (tp *TokenOutput, err error) {
+	token, err := jwt.ParseWithClaims(tokenStr, &TokenOutput{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(secretKey), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	if claims, ok := token.Claims.(*TokenOutput); ok && token.Valid {
+		return claims, nil
+	} else {
+		return nil, fmt.Errorf("invalid-token")
+	}
+}
 
 /*GeneredHashSha256 : Genera un hash con encriptacion sha256 */
 func GeneredHashSha256(key string) string {
