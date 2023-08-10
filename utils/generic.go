@@ -12,6 +12,52 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// validateSQLInjection : Valida un string si no tiene palabras reservadas sql
+func ValidateSQLInjection(input string) bool {
+	// Lista de palabras clave que podrían ser utilizadas en una inyección SQL
+	keywords := []string{
+		"--",
+		"/*",
+		"*/",
+		"@@",
+		"char",
+		"nchar",
+		"varchar",
+		"nvarchar",
+		"alter",
+		"begin",
+		"cast",
+		"create",
+		"cursor",
+		"declare",
+		"delete",
+		"drop",
+		"end",
+		"exec",
+		"execute",
+		"fetch",
+		"insert",
+		"kill",
+		"open",
+		"select",
+		"sys",
+		"sysobjects",
+		"syscolumns",
+		"table",
+		"update",
+	}
+	// Convertir la entrada a minúsculas para la comparación
+	inputLower := strings.ToLower(input)
+	// Comprobar si la entrada contiene alguna de las palabras clave
+	for _, keyword := range keywords {
+		if strings.Contains(inputLower, keyword) {
+			return false
+		}
+	}
+
+	return true
+}
+
 /*EnvsLoad : carga un arreglo con variables de entorno y lo regresar enun map[string]string*/
 func EnvsLoad(envs ...string) (map[string]string, error) {
 	var m = map[string]string{}
