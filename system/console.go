@@ -1,8 +1,10 @@
 package system
 
 import (
+	"bytes"
 	"fmt"
 	"net"
+	"os/exec"
 	"runtime"
 	"strings"
 
@@ -17,6 +19,7 @@ type (
 )
 
 const (
+	ShellToUse = "bash"
 
 	/*colores disponibles */
 
@@ -259,4 +262,34 @@ windows
 */
 func IsSO(so string) bool {
 	return utils.ReturnIf(runtime.GOOS == so, true, false).(bool)
+}
+
+/*
+ExecuteBashLinux : ejecuta un comando en el bash de linux devolviendo primero
+salida de la ejecucion
+salida si da error al ejecucion
+error nativo de golang
+*/
+func ExecuteBashLinux(command string) (string, string, error) {
+	var stdout, stderr bytes.Buffer
+	cmd := exec.Command(ShellToUse, "-c", command)
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+	return stdout.String(), stderr.String(), err
+}
+
+func ExecutePrintLinux(command string) {
+	out, outErr, err := ExecuteBashLinux(command)
+	if !utils.IsEmptyStr(outErr) {
+		PrintGreen("%s\n", outErr)
+	}
+	if !utils.IsEmptyStr(out) {
+		PrintGreen("%s\n", out)
+	}
+	if err != nil {
+		if err.Error() != "exit status 1" {
+			PrintRed("%s\n", err.Error())
+		}
+	}
 }

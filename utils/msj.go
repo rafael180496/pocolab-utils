@@ -1,11 +1,18 @@
 package utils
 
+import "strings"
+
 type (
 	/*StMsj : estructura para manejo de errores y mensajes personalizados */
 	StMsj struct {
 		Store map[string]string
 	}
 )
+
+// IsEmptyStr : valida si un string esta vacio
+func IsEmptyStr(v string) bool {
+	return strings.TrimSpace(v) == ""
+}
 
 /*AddMsj : agrega un mensaje con su codigo unico */
 func (p *StMsj) AddMsj(code, msj string) {
