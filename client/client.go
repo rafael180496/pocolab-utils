@@ -42,6 +42,25 @@ type (
 	}
 )
 
+const (
+	/*Peticiones http*/
+
+	/*POST : peticion http POST*/
+	POST HTTPTip = "POST"
+	/*GET : peticion http GET*/
+	GET HTTPTip = "GET"
+	/*PUT : peticion http PUT*/
+	PUT HTTPTip = "PUT"
+	/*DELETE : peticion http DELETE*/
+	DELETE HTTPTip = "DELETE"
+	/*Tipos de protocolos : http https */
+
+	/*HTTP : protocolo http*/
+	HTTP = "http"
+	/*HTTPS : protocolo https*/
+	HTTPS = "https"
+)
+
 /*BasicAuth : autentificacion basica de un client http */
 func BasicAuth(username, password string) string {
 	auth := fmt.Sprintf("%s:%s", username, password)
