@@ -29,7 +29,7 @@ func ParseJSON(d JSON, v interface{}) error {
 
 /*ToJsonMapStr : convierte un string a map*/
 func ToJsonMapStr(jsonStr string) (map[string]string, error) {
-	jsonStr = strings.ReplaceAll(jsonStr, "\r\n", "")
+	jsonStr = CleanStringJson(jsonStr)
 	var m map[string]string
 	err := json.Unmarshal([]byte(jsonStr), &m)
 	if err != nil {
@@ -40,8 +40,16 @@ func ToJsonMapStr(jsonStr string) (map[string]string, error) {
 
 /*JSONtoObj : convierte un string a map*/
 func JSONStrObj(data string) ([]map[string]interface{}, error) {
-	data = strings.ReplaceAll(data, "\r\n", "")
+	data = CleanStringJson(data)
 	return JSONtoObj([]byte(data))
+}
+
+// CleanStringJson : limpia un string json de caracteres especiales
+func CleanStringJson(data string) string {
+	data = strings.ReplaceAll(data, "\r", "")
+	data = strings.ReplaceAll(data, "\\", "")
+	data = strings.ReplaceAll(data, "\n", "")
+	return data
 }
 
 /*JSONtoObj : convierte objetos JSON en map.*/
