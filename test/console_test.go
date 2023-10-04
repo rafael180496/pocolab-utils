@@ -29,6 +29,7 @@ func TestIP4(t *testing.T) {
 
 /*TestMsjPc : prueba todos los texto disponible */
 func TestMsjPc(t *testing.T) {
+	system.PrintGreen("Texto:Hola\n")
 	t.Logf("Texto:%s", system.MsjPc(system.Green, "%s", system.Green))
 	t.Logf("Texto:%s", system.MsjPc(system.Red, "%s", system.Red))
 	t.Logf("Texto:%s", system.MsjPc(system.Blue, "%s", system.Blue))

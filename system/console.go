@@ -95,11 +95,11 @@ func MsjPc(c Pc, format string, arg ...interface{}) string {
 	var (
 		menj strings.Builder
 	)
-	if !IsLinux() {
-		fmt.Fprintf(&menj, format, arg...)
-	} else {
+	if IsLinux() || IsWindows() {
 		d := color.New(sendColor(c), color.Bold)
 		d.Fprintf(&menj, format, arg...)
+	} else {
+		fmt.Fprintf(&menj, format, arg...)
 	}
 	return menj.String()
 }
@@ -109,11 +109,11 @@ PrintPc : muestra un printf con color personalizado para consolas
 basadas en linux
 */
 func PrintPc(c Pc, format string, arg ...interface{}) {
-	if !IsLinux() {
-		fmt.Printf(format, arg...)
-	} else {
+	if IsLinux() || IsWindows() {
 		d := color.New(sendColor(c), color.Bold)
 		d.Printf(format, arg...)
+	} else {
+		fmt.Printf(format, arg...)
 	}
 }
 
