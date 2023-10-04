@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"strings"
 )
 
 type (
@@ -28,6 +29,7 @@ func ParseJSON(d JSON, v interface{}) error {
 
 /*ToJsonMapStr : convierte un string a map*/
 func ToJsonMapStr(jsonStr string) (map[string]string, error) {
+	jsonStr = strings.ReplaceAll(jsonStr, "\r\n", "")
 	var m map[string]string
 	err := json.Unmarshal([]byte(jsonStr), &m)
 	if err != nil {
@@ -38,6 +40,7 @@ func ToJsonMapStr(jsonStr string) (map[string]string, error) {
 
 /*JSONtoObj : convierte un string a map*/
 func JSONStrObj(data string) ([]map[string]interface{}, error) {
+	data = strings.ReplaceAll(data, "\r\n", "")
 	return JSONtoObj([]byte(data))
 }
 
