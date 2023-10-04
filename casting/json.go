@@ -26,6 +26,21 @@ func ParseJSON(d JSON, v interface{}) error {
 	return json.Unmarshal(d, v)
 }
 
+/*ToJsonMapStr : convierte un string a map*/
+func ToJsonMapStr(jsonStr string) (map[string]string, error) {
+	var m map[string]string
+	err := json.Unmarshal([]byte(jsonStr), &m)
+	if err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+/*JSONtoObj : convierte un string a map*/
+func JSONStrObj(data string) ([]map[string]interface{}, error) {
+	return JSONtoObj([]byte(data))
+}
+
 /*JSONtoObj : convierte objetos JSON en map.*/
 func JSONtoObj(d JSON) ([]map[string]interface{}, error) {
 	var objs []map[string]interface{}

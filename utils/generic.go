@@ -71,6 +71,15 @@ func EnvsLoad(envs ...string) (map[string]string, error) {
 	return m, nil
 }
 
+/*CreateEnvs : genera un .env solo con un map string*/
+func CreateEnvs(data map[string]string) error {
+	err := godotenv.Write(data, ".env")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 /*Reverse :  manda la reversa de un string */
 func Reverse(s string) string {
 	r := []rune(s)
