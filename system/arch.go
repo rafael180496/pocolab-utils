@@ -4,10 +4,8 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"log"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/rafael180496/pocolab-utils/casting"
 	"github.com/rafael180496/pocolab-utils/utils"
@@ -35,19 +33,6 @@ type (
 	StArch struct {
 		Path   string `json:"file"`
 		IndDir bool   `json:"indir"`
-	}
-	/*StLog : Estructura para crear log personalizados por medio de la fecha
-	directorio/fecha.log
-	*/
-	StLog struct {
-		//Directorio contenido
-		Dir string
-		//Nombre del log mas fecha
-		Name string
-		//Fecha
-		Fe time.Time
-		//Prefijo
-		Prefix string
 	}
 )
 
@@ -78,43 +63,6 @@ func (p *StArch) Create() error {
 	return nil
 }
 
-/*Printf : Ingresa un texto en los logs asignado. */
-func (p *StLog) Printf(format string, args ...interface{}) error {
-	err := p.Init()
-	if err != nil {
-		return err
-	}
-	log.Printf(format, args...)
-	return nil
-}
-
-/*ValidF :  valida la fecha del log cargado*/
-func (p *StLog) ValidF() {
-	if !utils.DateIdent(p.Fe, time.Now()) {
-		p.Fe = time.Now()
-	}
-}
-
-/*Init : Inicializa el log para comenzarlo a usar */
-func (p *StLog) Init() error {
-	p.ValidF()
-	NameArch := fmt.Sprintf("%s/%s%s.log", utils.Trim(p.Dir), utils.Trim(p.Name), utils.Trim(casting.TimetoStr(p.Fe)))
-	if !FileExist(p.Dir, true) {
-		errCreate := DirNew(p.Dir)
-		if errCreate != nil {
-			return errCreate
-		}
-	}
-	log.SetPrefix(p.Prefix)
-	log.SetFlags(log.Ldate | log.Lmicroseconds)
-	file, err := FileNew(NameArch)
-	if err != nil {
-		return err
-	}
-	log.SetOutput(file)
-	return nil
-}
-
 /*ReadFileStr : lee un archivo de texto y lo pasa a string*/
 func ReadFileStr(path string) (string, error) {
 	data, err := os.ReadFile(path)
@@ -126,22 +74,6 @@ func ReadFileStr(path string) (string, error) {
 		return "", utils.StrErr("el contenido del archivo esta vacio")
 	}
 	return dataStr, nil
-}
-
-/*NewStLog : Crea una nueva intancia de StLog */
-func NewStLog(dir, name, prefix string, fe time.Time) (StLog, error) {
-	LogNew := StLog{
-		Dir:    dir,
-		Name:   name,
-		Prefix: prefix,
-		Fe:     fe,
-	}
-	err := LogNew.Init()
-	if err != nil {
-		return LogNew, err
-	}
-
-	return LogNew, nil
 }
 
 /*FileExt : Valida las extenciones de archivos.*/
