@@ -190,6 +190,7 @@ func StringToDate(s string) (time.Time, error) {
 		time.StampMilli,
 		time.StampMicro,
 		time.StampNano,
+		"20060102",
 	})
 }
 
